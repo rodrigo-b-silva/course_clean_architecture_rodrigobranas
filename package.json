@@ -1,0 +1,27 @@
+{
+  "name": "course_clean_architecture_rodrigobranas",
+  "version": "1.0.0",
+  "description": "Projeto de um isstema de gestão financeiro alvo dos conhecimentos adquiridos no custo de Clean Code &amp; Clean Architecture ministrado pelo instrutor Rodrigo Branas",
+  "main": "index.js",
+  "scripts": {
+    "test": "tsc && jest ./dist"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rodrigo-b-silva/course_clean_architecture_rodrigobranas.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/rodrigo-b-silva/course_clean_architecture_rodrigobranas/issues"
+  },
+  "homepage": "https://github.com/rodrigo-b-silva/course_clean_architecture_rodrigobranas#readme",
+  "devDependencies": {
+    "@types/jest": "^29.5.0",
+    "@types/sinon": "^10.0.13",
+    "jest": "^29.5.0",
+    "sinon": "^15.0.3",
+    "typescript": "^5.0.4"
+  }
+}
