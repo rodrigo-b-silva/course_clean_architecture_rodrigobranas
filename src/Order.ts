@@ -7,15 +7,18 @@ export default class Order {
   cpf: Cpf;
   orderItems: OrderItem[];
   coupon: Coupon | undefined;
+  MINIMUM_FREIGHT = 10;
+  STANDARD_DISTANCE = 1000;
+  freight = 0;
 
   constructor(cpf: string) {
     this.cpf = new Cpf(cpf);
     this.orderItems = [];
-
   }
 
   addItem(item: Item, quantity: number) {
-    this.orderItems.push(new OrderItem(item.idItem, item.price, quantity))
+    this.orderItems.push(new OrderItem(item.idItem, item.price, quantity));
+    this.freight += this.calculateFreightItem(item, quantity);
   }
 
   addCoupon(coupon: Coupon) {
@@ -31,5 +34,15 @@ export default class Order {
       total -= (total * this.coupon.percentage) / 100;
     }
     return total;
+  }
+
+  calculateFreightItem(item: Item, quantity: number) {
+    const freightItem = (this.STANDARD_DISTANCE * item.getVolume() * (item.getDensity()/100));
+    return freightItem * quantity;
+  }
+
+  getFreight() {
+    if(this.freight < this.MINIMUM_FREIGHT) return this.MINIMUM_FREIGHT;
+    return this.freight;
   }
 }
