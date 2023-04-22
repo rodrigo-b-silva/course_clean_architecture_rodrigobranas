@@ -1,28 +1,34 @@
 import Coupon from "./Coupon";
 import Cpf from "./Cpf";
+import DefaultFreigthCalculator from "./DefaultFreigthCalculator";
+import FreigthCalculator from "./FreightCalculator";
 import Item from "./Item";
 import OrderItem from "./OrderItem";
 
 export default class Order {
   cpf: Cpf;
-  orderItems: OrderItem[];
+  private orderItems: OrderItem[];
   coupon: Coupon | undefined;
-  MINIMUM_FREIGHT = 10;
-  STANDARD_DISTANCE = 1000;
-  freight = 0;
+  private freigth: number;
 
-  constructor(cpf: string) {
+  constructor(cpf: string, readonly date: Date = new Date(), readonly freigthCalculator: FreigthCalculator = new DefaultFreigthCalculator()) {
     this.cpf = new Cpf(cpf);
     this.orderItems = [];
+    this.freigth = 0;
   }
 
   addItem(item: Item, quantity: number) {
-    this.orderItems.push(new OrderItem(item.idItem, item.price, quantity));
-    this.freight += this.calculateFreightItem(item, quantity);
+    this.freigth += this.freigthCalculator.calculate(item) * quantity;
+    this.orderItems.push(new OrderItem(item.idItem, item.price, quantity))
   }
 
   addCoupon(coupon: Coupon) {
+    if(coupon.isExpired(this.date)) return;
     this.coupon = coupon;
+  }
+
+  getFreigth() {
+    return this.freigth;
   }
 
   getTotal() {
@@ -31,18 +37,8 @@ export default class Order {
       total += orderItem.getTotal();
     }
     if(this.coupon) {
-      total -= (total * this.coupon.percentage) / 100;
+      total -= this.coupon.calculateDiscount(total, this.date);
     }
     return total;
-  }
-
-  calculateFreightItem(item: Item, quantity: number) {
-    const freightItem = (this.STANDARD_DISTANCE * item.getVolume() * (item.getDensity()/100));
-    return freightItem * quantity;
-  }
-
-  getFreight() {
-    if(this.freight < this.MINIMUM_FREIGHT) return this.MINIMUM_FREIGHT;
-    return this.freight;
   }
 }
