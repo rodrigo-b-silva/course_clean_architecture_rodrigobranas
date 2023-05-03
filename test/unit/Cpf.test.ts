@@ -1,4 +1,4 @@
-import Cpf from "../src/Cpf";
+import Cpf from "../../src/domain/entity/Cpf";
 
 test("Deve validar um CPF válido", function () {
 	expect(() => new Cpf("357.188.378-05")).toBeTruthy();
