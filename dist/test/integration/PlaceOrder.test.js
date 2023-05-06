@@ -16,7 +16,7 @@ const PlaceOrder_1 = __importDefault(require("../../src/application/useCase/Plac
 const CouponRepositoryMemory_1 = __importDefault(require("../../src/infra/repository/memory/CouponRepositoryMemory"));
 const ItemRepositoryMemory_1 = __importDefault(require("../../src/infra/repository/memory/ItemRepositoryMemory"));
 const OrderRepositoryMemory_1 = __importDefault(require("../../src/infra/repository/memory/OrderRepositoryMemory"));
-test("Deve fazer um pedido", function () {
+test("Deve fazer um pedido e retornar total", function () {
     return __awaiter(this, void 0, void 0, function* () {
         const itemRepository = new ItemRepositoryMemory_1.default();
         const orderRepository = new OrderRepositoryMemory_1.default();
@@ -34,6 +34,26 @@ test("Deve fazer um pedido", function () {
         };
         const output = yield placeOrder.execute(input);
         expect(output.total).toBe(88);
+    });
+});
+test("Deve fazer um pedido e retornar code", function () {
+    return __awaiter(this, void 0, void 0, function* () {
+        const itemRepository = new ItemRepositoryMemory_1.default();
+        const orderRepository = new OrderRepositoryMemory_1.default();
+        const couponRepository = new CouponRepositoryMemory_1.default();
+        const placeOrder = new PlaceOrder_1.default(itemRepository, orderRepository, couponRepository);
+        const input = {
+            cpf: "839.435.452-10",
+            orderItems: [
+                { idItem: 1, quantity: 1 },
+                { idItem: 2, quantity: 1 },
+                { idItem: 3, quantity: 3 },
+            ],
+            date: new Date("2023-05-03")
+        };
+        const output = yield placeOrder.execute(input);
+        const year = input.date.getFullYear();
+        expect(output.code).toBe(`${year}00000001`);
     });
 });
 test("Deve fazer um pedido com cálculo de frete", function () {

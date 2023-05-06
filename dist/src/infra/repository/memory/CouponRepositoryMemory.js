@@ -7,7 +7,9 @@ const Coupon_1 = __importDefault(require("../../../domain/entity/Coupon"));
 class CouponRepositoryMemory {
     constructor() {
         this.coupons = [
-            new Coupon_1.default('VALE20', 20)
+            new Coupon_1.default('VALE10', 10),
+            new Coupon_1.default('VALE20', 20),
+            new Coupon_1.default('VALE30', 30)
         ];
     }
     findByCode(code) {

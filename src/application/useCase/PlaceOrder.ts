@@ -23,7 +23,8 @@ export default class PlaceOrder {
         }
         await this.orderRepository.save(order);
         const total = order.getTotal();
-        const output = new PlaceOrderOutput(total);
+        const code = order.code || '';
+        const output = new PlaceOrderOutput(total, code);
         return output;
     }
 }

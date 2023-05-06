@@ -10,6 +10,7 @@ export default class Order {
   private orderItems: OrderItem[];
   coupon: Coupon | undefined;
   private freigth: number;
+  code?: string; 
 
   constructor(cpf: string, readonly date: Date = new Date(), readonly freigthCalculator: FreigthCalculator = new DefaultFreigthCalculator()) {
     this.cpf = new Cpf(cpf);
