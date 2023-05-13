@@ -1,34 +1,20 @@
-import SimulateFreigth from "../../src/application/useCase/SimulateFreigth";
+import SimulateFreigth from "../../src/application/useCase/simulate_freight/SimulateFreigth";
+import SimulateFreigthInput from "../../src/application/useCase/simulate_freight/SimulateFreigthInput";
 import DefaultFreigthCalculator from "../../src/domain/entity/DefaultFreigthCalculator";
-import FixedFreigthCalculator from "../../src/domain/entity/FixedFreigthCalculator";
-import ItemRepositoryMemory from "../../src/infra/repository/memory/ItemRepositoryMemory";
+import PgPromiseConnectionAdapter from "../../src/infra/database/PgPromiseConnectionAdapter";
+import ItemRepositoryDatabase from "../../src/infra/repository/database/ItemRepositoryDatabase";
 
-test('Deve simular o frete com estratégia fixa', async function() {
-    const itemRepository = new ItemRepositoryMemory();
-    const fixedFreigthCalculator = new FixedFreigthCalculator();
-    const simulateFreigth = new SimulateFreigth(fixedFreigthCalculator, itemRepository);
-    const input = {
-        orderItems: [
-            { idItem: 1, quantity: 1 },
-            { idItem: 2, quantity: 1 },
-            { idItem: 3, quantity: 3 },
-        ]
-    }
+test("Deve simular o frete dos itens", async function() {
+    const connection = PgPromiseConnectionAdapter.getInstance();
+    const itemRepository = new ItemRepositoryDatabase(connection);
+    const freigthCalculator = new DefaultFreigthCalculator();
+    const simulateFreigth = new SimulateFreigth(itemRepository, freigthCalculator);
+    const input = new SimulateFreigthInput([
+        { idItem: 4, quantity: 1 },
+        { idItem: 5, quantity: 1 },
+        { idItem: 6, quantity: 3 },
+    ]);
     const output = await simulateFreigth.execute(input);
-    expect(output.freight).toBe(50)
-});
+    expect(output.amount).toBe(260);
 
-test('Deve simular o frete com estratégia default', async function() {
-    const itemRepository = new ItemRepositoryMemory();
-    const defaultFreigthCalculator = new DefaultFreigthCalculator();
-    const simulateFreigth = new SimulateFreigth(defaultFreigthCalculator, itemRepository);
-    const input = {
-        orderItems: [
-            { idItem: 4, quantity: 1 },
-            { idItem: 5, quantity: 1 },
-            { idItem: 6, quantity: 1 },
-        ]
-    }
-    const output = await simulateFreigth.execute(input);
-    expect(output.freight).toBe(240)
 });

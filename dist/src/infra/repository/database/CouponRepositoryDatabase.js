@@ -12,24 +12,18 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const SimulateFreigthOutput_1 = __importDefault(require("./SimulateFreigthOutput"));
-class SimulateFreigth {
-    constructor(freigthCalculator, itemRepository) {
-        this.freigthCalculator = freigthCalculator;
-        this.itemRepository = itemRepository;
+const Coupon_1 = __importDefault(require("../../../domain/entity/Coupon"));
+class CouponRepositoryDatabase {
+    constructor(connection) {
+        this.connection = connection;
     }
-    execute(input) {
+    findByCode(code) {
         return __awaiter(this, void 0, void 0, function* () {
-            let freight = 0;
-            for (const orderItem of input.orderItems) {
-                const item = yield this.itemRepository.findById(orderItem.idItem);
-                if (!item)
-                    throw new Error("Item not found");
-                freight += this.freigthCalculator.calculate(item) * orderItem.quantity;
-            }
-            const output = new SimulateFreigthOutput_1.default(freight);
-            return output;
+            const [couponData] = yield this.connection.query("select * from ccca.coupon where code = $1", [code]);
+            if (!couponData)
+                return;
+            return new Coupon_1.default(couponData.code, couponData.percentage, couponData.expire_date);
         });
     }
 }
-exports.default = SimulateFreigth;
+exports.default = CouponRepositoryDatabase;

@@ -56,3 +56,12 @@ test("Deve criar um pedido com 3 itens com o cálculo do frete com a estratégia
     const freigth = order.getFreigth();
     expect(freigth).toBe(50);
 });
+test("Deve criar um pedido com código", function () {
+    const cpf = "839.435.452-10";
+    const order = new Order_1.default(cpf, new Date('2023-04-02'), new FixedFreigthCalculator_1.default());
+    order.addItem(new Item_1.default(4, "Instrumentos musicais", "Guitarra", 1000, 100, 30, 10, 3), 1);
+    order.addItem(new Item_1.default(5, "Instrumentos musicais", "Amplificador", 5000, 100, 50, 50, 20), 1);
+    order.addItem(new Item_1.default(6, "Acessórios", "Cabo", 30, 10, 10, 10, 0.9), 3);
+    const code = order.getCode();
+    expect(code).toBe("202300000001");
+});

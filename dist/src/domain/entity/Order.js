@@ -5,14 +5,17 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const Cpf_1 = __importDefault(require("./Cpf"));
 const DefaultFreigthCalculator_1 = __importDefault(require("./DefaultFreigthCalculator"));
+const OrderCode_1 = __importDefault(require("./OrderCode"));
 const OrderItem_1 = __importDefault(require("./OrderItem"));
 class Order {
-    constructor(cpf, date = new Date(), freigthCalculator = new DefaultFreigthCalculator_1.default()) {
+    constructor(cpf, date = new Date(), freigthCalculator = new DefaultFreigthCalculator_1.default(), sequence = 1) {
         this.date = date;
         this.freigthCalculator = freigthCalculator;
+        this.sequence = sequence;
         this.cpf = new Cpf_1.default(cpf);
         this.orderItems = [];
         this.freigth = 0;
+        this.code = new OrderCode_1.default(date, sequence);
     }
     addItem(item, quantity) {
         this.freigth += this.freigthCalculator.calculate(item) * quantity;
@@ -25,6 +28,15 @@ class Order {
     }
     getFreigth() {
         return this.freigth;
+    }
+    getCode() {
+        return this.code.value;
+    }
+    getCpf() {
+        return this.cpf.value;
+    }
+    getOrderItems() {
+        return this.orderItems;
     }
     getTotal() {
         let total = 0;

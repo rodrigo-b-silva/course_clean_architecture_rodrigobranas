@@ -1,8 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 class SimulateFreigthOutput {
-    constructor(freight) {
-        this.freight = freight;
+    constructor(amount) {
+        this.amount = amount;
     }
 }
 exports.default = SimulateFreigthOutput;

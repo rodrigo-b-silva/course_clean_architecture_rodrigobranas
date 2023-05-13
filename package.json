@@ -4,7 +4,7 @@
   "description": "Projeto de um isstema de gestão financeiro alvo dos conhecimentos adquiridos no custo de Clean Code &amp; Clean Architecture ministrado pelo instrutor Rodrigo Branas",
   "main": "index.js",
   "scripts": {
-    "test": "tsc && jest ./dist"
+    "test": "tsc && jest ./dist --forceExit"
   },
   "repository": {
     "type": "git",
@@ -29,6 +29,7 @@
   "dependencies": {
     "bluebird": "^3.7.2",
     "dotenv": "^16.0.3",
-    "mongoose": "^7.1.0"
+    "mongoose": "^7.1.0",
+    "pg-promise": "^11.4.3"
   }
 }

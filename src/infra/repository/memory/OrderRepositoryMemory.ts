@@ -9,12 +9,13 @@ export default class OrderRepositoryMemory implements OrderRepository {
         this.orders = [];
         this.sequence = 0;
     }
-
-    save(order: Order): Promise<Order> {
-        const year = order.date.getFullYear();
-        this.sequence++;
-        order.code = year + String(this.sequence).padStart(8, '0'); 
+    
+    save(order: Order): Promise<void> {
         this.orders.push(order);
-        return Promise.resolve(order);
+        return Promise.resolve();
     }
+    
+    count(): Promise<number> {
+        return Promise.resolve(this.orders.length);
+    }   
 }

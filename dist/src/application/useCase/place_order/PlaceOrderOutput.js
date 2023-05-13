@@ -1,9 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 class PlaceOrderOutput {
-    constructor(total, code) {
-        this.total = total;
+    constructor(code, total) {
         this.code = code;
+        this.total = total;
     }
 }
 exports.default = PlaceOrderOutput;

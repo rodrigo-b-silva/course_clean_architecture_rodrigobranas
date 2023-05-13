@@ -3,6 +3,7 @@ import Cpf from "./Cpf";
 import DefaultFreigthCalculator from "./DefaultFreigthCalculator";
 import FreigthCalculator from "./FreightCalculator";
 import Item from "./Item";
+import OrderCode from "./OrderCode";
 import OrderItem from "./OrderItem";
 
 export default class Order {
@@ -10,12 +11,13 @@ export default class Order {
   private orderItems: OrderItem[];
   coupon: Coupon | undefined;
   private freigth: number;
-  code?: string; 
+  private code: OrderCode; 
 
-  constructor(cpf: string, readonly date: Date = new Date(), readonly freigthCalculator: FreigthCalculator = new DefaultFreigthCalculator()) {
+  constructor(cpf: string, readonly date: Date = new Date(), readonly freigthCalculator: FreigthCalculator = new DefaultFreigthCalculator(), readonly sequence: number = 1) {
     this.cpf = new Cpf(cpf);
     this.orderItems = [];
     this.freigth = 0;
+    this.code = new OrderCode(date, sequence);
   }
 
   addItem(item: Item, quantity: number) {
@@ -30,6 +32,18 @@ export default class Order {
 
   getFreigth() {
     return this.freigth;
+  }
+
+  getCode() {
+    return this.code.value;
+  }
+
+  getCpf() {
+    return this.cpf.value;
+  }
+
+  getOrderItems() {
+    return this.orderItems;
   }
 
   getTotal() {

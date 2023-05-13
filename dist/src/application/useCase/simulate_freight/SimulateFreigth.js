@@ -12,34 +12,23 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const Order_1 = __importDefault(require("../../domain/entity/Order"));
-const PlaceOrderOutput_1 = __importDefault(require("./PlaceOrderOutput"));
-class PlaceOrder {
-    constructor(itemRepository, orderRepository, couponRepository) {
+const SimulateFreigthOutput_1 = __importDefault(require("./SimulateFreigthOutput"));
+class SimulateFreigth {
+    constructor(itemRepository, freigthCalculator) {
         this.itemRepository = itemRepository;
-        this.orderRepository = orderRepository;
-        this.couponRepository = couponRepository;
+        this.freigthCalculator = freigthCalculator;
     }
     execute(input) {
         return __awaiter(this, void 0, void 0, function* () {
-            const order = new Order_1.default(input.cpf, input.date);
-            for (const orderItem of input.orderItems) {
-                const item = yield this.itemRepository.findById(orderItem.idItem);
+            let amount = 0;
+            for (const inputItem of input.items) {
+                const item = yield this.itemRepository.findById(inputItem.idItem);
                 if (!item)
                     throw new Error("Item not found");
-                order.addItem(item, orderItem.quantity);
+                amount += this.freigthCalculator.calculate(item) * inputItem.quantity;
             }
-            if (input.coupon) {
-                const coupon = yield this.couponRepository.findByCode(input.coupon);
-                if (coupon)
-                    order.addCoupon(coupon);
-            }
-            yield this.orderRepository.save(order);
-            const total = order.getTotal();
-            const code = order.code || '';
-            const output = new PlaceOrderOutput_1.default(total, code);
-            return output;
+            return new SimulateFreigthOutput_1.default(amount);
         });
     }
 }
-exports.default = PlaceOrder;
+exports.default = SimulateFreigth;

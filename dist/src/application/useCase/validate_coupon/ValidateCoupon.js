@@ -8,21 +8,18 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-const ValidatorCouponOutput_1 = __importDefault(require("./ValidatorCouponOutput"));
-class ValidatorCoupon {
+class ValidateCoupon {
     constructor(couponRepository) {
         this.couponRepository = couponRepository;
     }
-    execute(input) {
+    execute(code) {
         return __awaiter(this, void 0, void 0, function* () {
-            const valid = yield this.couponRepository.findByCode(input.code);
-            const output = new ValidatorCouponOutput_1.default(!!valid);
-            return output;
+            const coupon = yield this.couponRepository.findByCode(code);
+            if (!coupon)
+                throw new Error("Invalid coupon");
+            return coupon.isValid();
         });
     }
 }
-exports.default = ValidatorCoupon;
+exports.default = ValidateCoupon;
