@@ -8,7 +8,11 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
+const Order_1 = __importDefault(require("../../../domain/entity/Order"));
 class OrderRepositoryDatabase {
     constructor(connection) {
         this.connection = connection;
@@ -26,6 +30,24 @@ class OrderRepositoryDatabase {
         return __awaiter(this, void 0, void 0, function* () {
             const [orderData] = yield this.connection.query("select count(*)::int as count from ccca.order", []);
             return orderData.count;
+        });
+    }
+    findByCode(code) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const [orderData] = yield this.connection.query("select *from ccca.order where code = $1", [code]);
+            if (!orderData)
+                return;
+            return new Order_1.default(orderData.cpf, orderData.issue_date, orderData.freigth, orderData.sequence);
+        });
+    }
+    list() {
+        return __awaiter(this, void 0, void 0, function* () {
+            const ordersData = yield this.connection.query("select *from ccca.order", []);
+            let orderList = [];
+            for (const orderData of ordersData) {
+                orderList.push(new Order_1.default(orderData.cpf, orderData.issue_date, orderData.freight, orderData.sequence));
+            }
+            return orderList;
         });
     }
 }

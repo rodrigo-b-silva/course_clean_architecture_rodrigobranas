@@ -12,5 +12,11 @@ class OrderRepositoryMemory {
     count() {
         return Promise.resolve(this.orders.length);
     }
+    findByCode(code) {
+        return Promise.resolve(this.orders.find(order => order.getCode() === code));
+    }
+    list() {
+        return Promise.resolve(this.orders);
+    }
 }
 exports.default = OrderRepositoryMemory;

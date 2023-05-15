@@ -9,7 +9,7 @@ export default class OrderRepositoryMemory implements OrderRepository {
         this.orders = [];
         this.sequence = 0;
     }
-    
+        
     save(order: Order): Promise<void> {
         this.orders.push(order);
         return Promise.resolve();
@@ -17,5 +17,13 @@ export default class OrderRepositoryMemory implements OrderRepository {
     
     count(): Promise<number> {
         return Promise.resolve(this.orders.length);
-    }   
+    }
+
+    findByCode(code: string): Promise<Order | undefined> {
+        return Promise.resolve(this.orders.find(order => order.getCode() === code));
+    }
+
+    list(): Promise<Order[]> {
+        return Promise.resolve(this.orders);
+    }
 }

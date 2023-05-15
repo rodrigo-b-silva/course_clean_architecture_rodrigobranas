@@ -11,7 +11,7 @@ beforeEach(function() {
     const itemRepository = new ItemRepositoryDatabase(connection);
     const orderRepository = new OrderRepositoryDatabase(connection);
     const couponRepository = new CouponRepositoryDatabase(connection);
-    placeOrder = new PlaceOrder(itemRepository, orderRepository, couponRepository);
+    placeOrder = new PlaceOrder(itemRepository, orderRepository, couponRepository);    
 })
 
 test("Deve fazer um pedido e retornar total", async function() {
