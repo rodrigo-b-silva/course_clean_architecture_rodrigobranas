@@ -50,5 +50,11 @@ class OrderRepositoryDatabase {
             return orderList;
         });
     }
+    clear() {
+        return __awaiter(this, void 0, void 0, function* () {
+            yield this.connection.query("delete from ccca.order_item", []);
+            yield this.connection.query("delete from ccca.order", []);
+        });
+    }
 }
 exports.default = OrderRepositoryDatabase;

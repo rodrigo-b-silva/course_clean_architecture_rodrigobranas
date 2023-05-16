@@ -34,4 +34,9 @@ export default class OrderRepositoryDatabase implements OrderRepository {
         }
         return orderList;
     }
+
+    async clear(): Promise<void> {
+		await this.connection.query("delete from ccca.order_item", []);
+		await this.connection.query("delete from ccca.order", []);
+	}
 } 

@@ -18,5 +18,9 @@ class OrderRepositoryMemory {
     list() {
         return Promise.resolve(this.orders);
     }
+    clear() {
+        this.orders = [];
+        return Promise.resolve();
+    }
 }
 exports.default = OrderRepositoryMemory;

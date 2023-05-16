@@ -5,4 +5,5 @@ export default interface OrderRepository {
     count(): Promise<number>;
     findByCode(code: string): Promise<Order | undefined>;
     list(): Promise<Order[]>;
+    clear(): Promise<void>;
 }

@@ -14,16 +14,16 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const PlaceOrder_1 = __importDefault(require("../../src/application/useCase/place_order/PlaceOrder"));
 const PgPromiseConnectionAdapter_1 = __importDefault(require("../../src/infra/database/PgPromiseConnectionAdapter"));
-const CouponRepositoryDatabase_1 = __importDefault(require("../../src/infra/repository/database/CouponRepositoryDatabase"));
-const ItemRepositoryDatabase_1 = __importDefault(require("../../src/infra/repository/database/ItemRepositoryDatabase"));
+const DatabaseRepositoryFactory_1 = __importDefault(require("../../src/infra/factory/DatabaseRepositoryFactory"));
 const OrderRepositoryDatabase_1 = __importDefault(require("../../src/infra/repository/database/OrderRepositoryDatabase"));
 let placeOrder;
+let orderRepository;
 beforeEach(function () {
     const connection = PgPromiseConnectionAdapter_1.default.getInstance();
-    const itemRepository = new ItemRepositoryDatabase_1.default(connection);
-    const orderRepository = new OrderRepositoryDatabase_1.default(connection);
-    const couponRepository = new CouponRepositoryDatabase_1.default(connection);
-    placeOrder = new PlaceOrder_1.default(itemRepository, orderRepository, couponRepository);
+    orderRepository = new OrderRepositoryDatabase_1.default(connection);
+    // const repositoryFactory = new MemoryRepositoryFactory();
+    const repositoryFactory = new DatabaseRepositoryFactory_1.default();
+    placeOrder = new PlaceOrder_1.default(repositoryFactory);
 });
 test("Deve fazer um pedido e retornar total", function () {
     return __awaiter(this, void 0, void 0, function* () {
@@ -68,6 +68,11 @@ test("Deve fazer um pedido com código", function () {
             date: new Date("2023-05-03")
         };
         const output = yield placeOrder.execute(input);
-        // expect(output.code).toBe("202300000001");
+        expect(output.code).toBe("202300000001");
+    });
+});
+afterEach(function () {
+    return __awaiter(this, void 0, void 0, function* () {
+        yield orderRepository.clear();
     });
 });

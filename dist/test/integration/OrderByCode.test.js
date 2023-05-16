@@ -23,7 +23,7 @@ beforeEach(function () {
 });
 test("Deve retornar um pedido com base no código", function () {
     return __awaiter(this, void 0, void 0, function* () {
-        const orderCode = "202300000002";
+        const orderCode = "202300000001";
         const order = yield orderByCode.execute(orderCode);
         expect(order.getCode()).toBe(orderCode);
     });

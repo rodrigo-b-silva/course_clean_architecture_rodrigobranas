@@ -26,4 +26,9 @@ export default class OrderRepositoryMemory implements OrderRepository {
     list(): Promise<Order[]> {
         return Promise.resolve(this.orders);
     }
+
+    clear(): Promise<void> {
+        this.orders = [];
+        return Promise.resolve();
+    }
 }

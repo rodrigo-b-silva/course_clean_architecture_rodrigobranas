@@ -8,16 +8,18 @@ import OrderByCode from '../application/useCase/orderByCode/OrderByCode';
 import PlaceOrder from '../application/useCase/place_order/PlaceOrder';
 import ItemRepository from '../domain/repository/ItemRepository';
 import CouponRepository from '../domain/repository/CouponRepository';
+import DatabaseRepositoryFactory from '../infra/factory/DatabaseRepositoryFactory';
 
 export class OrderController {
     private orderList: OrderList;
     private orderByCode: OrderByCode;
     private placeOrder: PlaceOrder;
+    private factoryRepository = new DatabaseRepositoryFactory();
     
     constructor(readonly itemRepository: ItemRepository, readonly orderRepository: OrderRepository, readonly couponRepository: CouponRepository) {
         this.orderList = new OrderList(orderRepository);
         this.orderByCode = new OrderByCode(orderRepository);
-        this.placeOrder = new PlaceOrder(itemRepository, orderRepository, couponRepository);
+        this.placeOrder = new PlaceOrder(this.factoryRepository);
     }
 
     async list(req: Request, res: Response): Promise<any> {

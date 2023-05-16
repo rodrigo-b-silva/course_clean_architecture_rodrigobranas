@@ -1,17 +1,21 @@
 import PlaceOrder from "../../src/application/useCase/place_order/PlaceOrder";
+import OrderRepository from "../../src/domain/repository/OrderRepository";
 import PgPromiseConnectionAdapter from "../../src/infra/database/PgPromiseConnectionAdapter";
+import DatabaseRepositoryFactory from "../../src/infra/factory/DatabaseRepositoryFactory";
+import MemoryRepositoryFactory from "../../src/infra/factory/MemoryRepositoryFactory";
 import CouponRepositoryDatabase from "../../src/infra/repository/database/CouponRepositoryDatabase";
 import ItemRepositoryDatabase from "../../src/infra/repository/database/ItemRepositoryDatabase";
 import OrderRepositoryDatabase from "../../src/infra/repository/database/OrderRepositoryDatabase";
 
 let placeOrder: PlaceOrder;
+let orderRepository: OrderRepository;
 
 beforeEach(function() {
-    const connection = PgPromiseConnectionAdapter.getInstance();
-    const itemRepository = new ItemRepositoryDatabase(connection);
-    const orderRepository = new OrderRepositoryDatabase(connection);
-    const couponRepository = new CouponRepositoryDatabase(connection);
-    placeOrder = new PlaceOrder(itemRepository, orderRepository, couponRepository);    
+    const connection = PgPromiseConnectionAdapter.getInstance()
+    orderRepository = new OrderRepositoryDatabase(connection);
+    // const repositoryFactory = new MemoryRepositoryFactory();
+    const repositoryFactory = new DatabaseRepositoryFactory();
+    placeOrder = new PlaceOrder(repositoryFactory);    
 })
 
 test("Deve fazer um pedido e retornar total", async function() {
@@ -54,5 +58,9 @@ test("Deve fazer um pedido com código", async function() {
         date: new Date("2023-05-03")
     }
     const output = await placeOrder.execute(input);
-    // expect(output.code).toBe("202300000001");
+    expect(output.code).toBe("202300000001");
 });
+
+afterEach(async function() {
+    await orderRepository.clear();
+})

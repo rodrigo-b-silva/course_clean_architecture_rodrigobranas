@@ -11,7 +11,7 @@ beforeEach(function() {
 });
 
 test("Deve retornar um pedido com base no código", async function() {
-    const orderCode = "202300000002";
+    const orderCode = "202300000001";
     const order = await orderByCode.execute(orderCode);
     expect(order.getCode()).toBe(orderCode);
 });
