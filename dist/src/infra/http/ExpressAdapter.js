@@ -12,19 +12,22 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const OrderByCode_1 = __importDefault(require("../../src/application/useCase/orderByCode/OrderByCode"));
-const PgPromiseConnectionAdapter_1 = __importDefault(require("../../src/infra/database/PgPromiseConnectionAdapter"));
-const OrderRepositoryDatabase_1 = __importDefault(require("../../src/infra/repository/database/OrderRepositoryDatabase"));
-let orderByCode;
-beforeEach(function () {
-    const connection = PgPromiseConnectionAdapter_1.default.getInstance();
-    const orderRepository = new OrderRepositoryDatabase_1.default(connection);
-    orderByCode = new OrderByCode_1.default(orderRepository);
-});
-test("Deve retornar um pedido com base no código", function () {
-    return __awaiter(this, void 0, void 0, function* () {
-        const orderCode = "202300000001";
-        // const order = await orderByCode.execute(orderCode);
-        expect(1).toBe(1);
-    });
-});
+const express_1 = __importDefault(require("express"));
+class ExpressAdapter {
+    constructor() {
+        this.app = (0, express_1.default)();
+        this.app.use(express_1.default.json());
+    }
+    on(url, method, fn) {
+        this.app[method](url, function (req, res) {
+            return __awaiter(this, void 0, void 0, function* () {
+                const output = yield fn(req.params, req.body);
+                res.json(output);
+            });
+        });
+    }
+    listen(port) {
+        this.app.listen(port);
+    }
+}
+exports.default = ExpressAdapter;

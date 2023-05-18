@@ -12,19 +12,18 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const OrderByCode_1 = __importDefault(require("../../src/application/useCase/orderByCode/OrderByCode"));
-const PgPromiseConnectionAdapter_1 = __importDefault(require("../../src/infra/database/PgPromiseConnectionAdapter"));
-const OrderRepositoryDatabase_1 = __importDefault(require("../../src/infra/repository/database/OrderRepositoryDatabase"));
-let orderByCode;
-beforeEach(function () {
-    const connection = PgPromiseConnectionAdapter_1.default.getInstance();
-    const orderRepository = new OrderRepositoryDatabase_1.default(connection);
-    orderByCode = new OrderByCode_1.default(orderRepository);
-});
-test("Deve retornar um pedido com base no código", function () {
-    return __awaiter(this, void 0, void 0, function* () {
-        const orderCode = "202300000001";
-        // const order = await orderByCode.execute(orderCode);
-        expect(1).toBe(1);
-    });
-});
+const PlaceOrder_1 = __importDefault(require("../../application/useCase/place_order/PlaceOrder"));
+class PlaceOrderController {
+    constructor(repositoryFactory) {
+        this.repositoryFactory = repositoryFactory;
+    }
+    execute(params, body) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const placeOrder = new PlaceOrder_1.default(this.repositoryFactory);
+            const input = body;
+            input.date = new Date(input.date);
+            return yield placeOrder.execute(input);
+        });
+    }
+}
+exports.default = PlaceOrderController;
