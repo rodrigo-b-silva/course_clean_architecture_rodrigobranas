@@ -2,6 +2,7 @@ import SimulateFreigth from "../../application/useCase/simulate_freight/Simulate
 import DefaultFreigthCalculator from "../../domain/entity/DefaultFreigthCalculator";
 import RepositoryFactory from "../../domain/factory/RepositoryFactory";
 import OrderListController from "../controller/ListOrderController";
+import OrderByCodeController from "../controller/OrderByCodeController";
 import PlaceOrderController from "../controller/PlaceOrderController";
 import PgPromiseConnectionAdapter from "../database/PgPromiseConnectionAdapter";
 import ItemRepositoryDatabase from "../repository/database/ItemRepositoryDatabase";
@@ -18,6 +19,11 @@ export default class RouteConfig {
         http.on("/orders", "get", async function (params: any, body: any) {
             const placeOrderController = new OrderListController(repositoryFactory.createOrderRepository())
             return placeOrderController.execute(params, body);
+        })
+
+        http.on("/orders/:code", "get", async function (params: any, body: any) {
+            const orderByCodeController = new OrderByCodeController(repositoryFactory.createOrderRepository())
+            return orderByCodeController.execute(params, body)
         })
 
         // http.on("/simulate-freigth", "post", async function(params: any, body: any) {

@@ -33,20 +33,18 @@ test("Deve testar a API /orders (POST)", function () {
         expect(order.total).toBe(138);
     });
 });
-test("Deve testar a API /simulateFreigth (POST)", function () {
-    return __awaiter(this, void 0, void 0, function* () {
-        const response = yield (0, axios_1.default)({
-            url: "http://localhost:3000/simulate-freigth",
-            method: "post",
-            data: {
-                items: [
-                    { idItem: 4, quantity: 1 },
-                    { idItem: 5, quantity: 1 },
-                    { idItem: 6, quantity: 3 },
-                ]
-            }
-        });
-        const output = response.data;
-        expect(output.amount).toBe(260);
-    });
-});
+// test("Deve testar a API /simulateFreigth (POST)", async function() {
+//     const response = await axios({
+//         url: "http://localhost:3000/simulate-freigth",
+//         method: "post",
+//         data: {
+//             items: [
+//                 { idItem: 4, quantity: 1 },
+//                 { idItem: 5, quantity: 1 },
+//                 { idItem: 6, quantity: 3 },
+//             ]
+//         }
+//     });
+//     const output = response.data;
+//     expect(output.amount).toBe(260);
+// })

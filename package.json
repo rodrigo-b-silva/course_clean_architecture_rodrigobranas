@@ -5,7 +5,7 @@
   "main": "bin/server.ts",
   "scripts": {
     "test": "tsc && jest ./dist --forceExit",
-    "dev": "ts-node-dev bin/server.ts --transpile-only --ignore-watch node_modules --respawn bin/server.ts",
+    "devxxx": "xxxts-node-dev bin/server.ts --transpile-only --ignore-watch node_modules --respawn bin/server.ts",
     "main": "tsc && node ./dist/src/main"
   },
   "repository": {

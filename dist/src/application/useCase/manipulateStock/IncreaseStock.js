@@ -12,26 +12,18 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const fastify_1 = __importDefault(require("fastify"));
-class FastifyAdapter {
-    constructor() {
-        this.app = (0, fastify_1.default)();
+const StockOutput_1 = __importDefault(require("./StockOutput"));
+class IncreaseStock {
+    constructor(stockRepository) {
+        this.stockRepository = stockRepository;
     }
-    on(url, method, fn) {
-        this.app[method](url, function (req, res) {
-            return __awaiter(this, void 0, void 0, function* () {
-                const output = yield fn(req.params, req.body);
-                res.send(output);
-            });
-        });
-    }
-    listen(port) {
-        this.app.listen({
-            port,
-            host: "0.0.0.0"
-        }).then(() => {
-            console.log(`🚀 App running on port: ${port} with Fastify`);
+    execute(codeStock, quantity) {
+        return __awaiter(this, void 0, void 0, function* () {
+            yield this.stockRepository.increase(codeStock, quantity);
+            const newQuantity = yield this.stockRepository.getQuantity(codeStock);
+            const output = new StockOutput_1.default(codeStock, newQuantity);
+            return output;
         });
     }
 }
-exports.default = FastifyAdapter;
+exports.default = IncreaseStock;

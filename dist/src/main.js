@@ -4,10 +4,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const DatabaseRepositoryFactory_1 = __importDefault(require("./infra/factory/DatabaseRepositoryFactory"));
-const FastifyAdapter_1 = __importDefault(require("./infra/http/FastifyAdapter"));
+const ExpressAdapter_1 = __importDefault(require("./infra/http/ExpressAdapter"));
+// import FastifyAdapter from "./infra/http/FastifyAdapter";
 const RouteConfig_1 = __importDefault(require("./infra/http/RouteConfig"));
 const repositoryFactory = new DatabaseRepositoryFactory_1.default();
-const fastifyAdapter = new FastifyAdapter_1.default();
-// const expressAdapter = new ExpressAdapter();
-new RouteConfig_1.default(fastifyAdapter, repositoryFactory);
-fastifyAdapter.listen(3000);
+// const fastifyAdapter = new FastifyAdapter();
+const expressAdapter = new ExpressAdapter_1.default();
+new RouteConfig_1.default(expressAdapter, repositoryFactory);
+expressAdapter.listen(3000);

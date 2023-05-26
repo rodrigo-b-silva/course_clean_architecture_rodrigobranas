@@ -13,6 +13,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const ListOrderController_1 = __importDefault(require("../controller/ListOrderController"));
+const OrderByCodeController_1 = __importDefault(require("../controller/OrderByCodeController"));
 const PlaceOrderController_1 = __importDefault(require("../controller/PlaceOrderController"));
 class RouteConfig {
     constructor(http, repositoryFactory) {
@@ -26,6 +27,12 @@ class RouteConfig {
             return __awaiter(this, void 0, void 0, function* () {
                 const placeOrderController = new ListOrderController_1.default(repositoryFactory.createOrderRepository());
                 return placeOrderController.execute(params, body);
+            });
+        });
+        http.on("/orders/:code", "get", function (params, body) {
+            return __awaiter(this, void 0, void 0, function* () {
+                const orderByCodeController = new OrderByCodeController_1.default(repositoryFactory.createOrderRepository());
+                return orderByCodeController.execute(params, body);
             });
         });
         // http.on("/simulate-freigth", "post", async function(params: any, body: any) {
