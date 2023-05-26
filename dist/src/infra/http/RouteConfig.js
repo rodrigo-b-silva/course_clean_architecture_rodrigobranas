@@ -12,11 +12,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const SimulateFreigth_1 = __importDefault(require("../../application/useCase/simulate_freight/SimulateFreigth"));
-const DefaultFreigthCalculator_1 = __importDefault(require("../../domain/entity/DefaultFreigthCalculator"));
+const ListOrderController_1 = __importDefault(require("../controller/ListOrderController"));
 const PlaceOrderController_1 = __importDefault(require("../controller/PlaceOrderController"));
-const PgPromiseConnectionAdapter_1 = __importDefault(require("../database/PgPromiseConnectionAdapter"));
-const ItemRepositoryDatabase_1 = __importDefault(require("../repository/database/ItemRepositoryDatabase"));
 class RouteConfig {
     constructor(http, repositoryFactory) {
         http.on("/orders", "post", function (params, body) {
@@ -25,13 +22,17 @@ class RouteConfig {
                 return placeOrderController.execute(params, body);
             });
         });
-        http.on("/simulate-freigth", "post", function (params, body) {
+        http.on("/orders", "get", function (params, body) {
             return __awaiter(this, void 0, void 0, function* () {
-                const simulateFreigth = new SimulateFreigth_1.default(new ItemRepositoryDatabase_1.default(PgPromiseConnectionAdapter_1.default.getInstance()), new DefaultFreigthCalculator_1.default());
-                const input = body;
-                return yield simulateFreigth.execute(input);
+                const placeOrderController = new ListOrderController_1.default(repositoryFactory.createOrderRepository());
+                return placeOrderController.execute(params, body);
             });
         });
+        // http.on("/simulate-freigth", "post", async function(params: any, body: any) {
+        //     const simulateFreigth = new SimulateFreigth(new ItemRepositoryDatabase(PgPromiseConnectionAdapter.getInstance()), new DefaultFreigthCalculator());
+        //     const input = body;
+        //     return await simulateFreigth.execute(input);
+        // });
     }
 }
 exports.default = RouteConfig;

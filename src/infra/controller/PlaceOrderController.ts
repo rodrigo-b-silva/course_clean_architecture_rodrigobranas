@@ -1,6 +1,5 @@
 import PlaceOrder from "../../application/useCase/place_order/PlaceOrder";
 import RepositoryFactory from "../../domain/factory/RepositoryFactory";
-import DatabaseRepositoryFactory from "../factory/DatabaseRepositoryFactory";
 
 export default class PlaceOrderController {
     constructor(readonly repositoryFactory: RepositoryFactory) {

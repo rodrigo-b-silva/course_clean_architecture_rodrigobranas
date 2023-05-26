@@ -10,12 +10,14 @@ export default class ExpressAdapter implements Http {
     }
 
     on(url: string, method: string, fn: any): void {
-        this.app[method](url, async function(req: any, res: any) {  
+        this.app[method](url, async function (req: any, res: any) {
             const output = await fn(req.params, req.body);
             res.json(output);
         });
     }
     listen(port: number): void {
-        this.app.listen(port);
+        this.app.listen(port, () => {
+            console.log(`🚀 App running on port: ${port} with Express`)
+        });
     }
 }

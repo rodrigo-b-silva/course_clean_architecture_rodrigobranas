@@ -21,14 +21,14 @@ export default class PlaceOrder {
     async execute(input: PlaceOrderInput): Promise<PlaceOrderOutput> {
         const sequence = await this.orderRepository.count() + 1;
         const order = new Order(input.cpf, input.date, new DefaultFreigthCalculator(), sequence);
-        for(const orderItem of input.orderItems) {
+        for (const orderItem of input.orderItems) {
             const item = await this.itemRepository.findById(orderItem.idItem);
-            if(!item) throw new Error("Item not found");
+            if (!item) throw new Error("Item not found");
             order.addItem(item, orderItem.quantity);
         }
-        if(input.coupon) {
+        if (input.coupon) {
             const coupon = await this.couponRepository.findByCode(input.coupon);
-            if(coupon) order.addCoupon(coupon);
+            if (coupon) order.addCoupon(coupon);
         }
         await this.orderRepository.save(order);
         const total = order.getTotal();

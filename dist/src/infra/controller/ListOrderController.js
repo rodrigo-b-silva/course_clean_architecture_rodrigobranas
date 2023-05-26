@@ -12,24 +12,16 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const express_1 = __importDefault(require("express"));
-class ExpressAdapter {
-    constructor() {
-        this.app = (0, express_1.default)();
-        this.app.use(express_1.default.json());
+const OrderList_1 = __importDefault(require("../../application/useCase/orderList/OrderList"));
+class OrderListController {
+    constructor(orderRepository) {
+        this.orderRepository = orderRepository;
     }
-    on(url, method, fn) {
-        this.app[method](url, function (req, res) {
-            return __awaiter(this, void 0, void 0, function* () {
-                const output = yield fn(req.params, req.body);
-                res.json(output);
-            });
-        });
-    }
-    listen(port) {
-        this.app.listen(port, () => {
-            console.log(`🚀 App running on port: ${port} with Express`);
+    execute(params, body) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const orderList = new OrderList_1.default(this.orderRepository);
+            return yield orderList.execute();
         });
     }
 }
-exports.default = ExpressAdapter;
+exports.default = OrderListController;

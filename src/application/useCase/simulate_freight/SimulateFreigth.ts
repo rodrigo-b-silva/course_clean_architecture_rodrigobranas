@@ -9,9 +9,9 @@ export default class SimulateFreigth {
 
     async execute(input: SimulateFreigthInput): Promise<SimulateFreigthOutput> {
         let amount = 0;
-        for(const inputItem of input.items) {
+        for (const inputItem of input.items) {
             const item = await this.itemRepository.findById(inputItem.idItem);
-            if(!item) throw new Error("Item not found");
+            if (!item) throw new Error("Item not found");
             amount += this.freigthCalculator.calculate(item) * inputItem.quantity;
         }
         return new SimulateFreigthOutput(amount);
