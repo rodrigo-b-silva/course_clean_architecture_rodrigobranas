@@ -4,9 +4,9 @@ class DefaultFreigthCalculator {
     calculate(item) {
         if (!item.width || !item.height || !item.length || !item.weight)
             return 0;
-        const freigth = (1000 * item.getVolume() * (item.getDensity() / 100));
-        const minFreigth = 10;
-        return Math.max(minFreigth, freigth);
+        const freight = (1000 * item.getVolume() * (item.getDensity() / 100));
+        const minFreight = 10;
+        return Math.max(minFreight, freight);
     }
 }
 exports.default = DefaultFreigthCalculator;

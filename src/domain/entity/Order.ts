@@ -11,7 +11,7 @@ export default class Order {
   private orderItems: OrderItem[];
   coupon: Coupon | undefined;
   private freigth: number;
-  private code: OrderCode; 
+  private code: OrderCode;
 
   constructor(cpf: string, readonly date: Date = new Date(), readonly freigthCalculator: FreigthCalculator = new DefaultFreigthCalculator(), readonly sequence: number = 1) {
     this.cpf = new Cpf(cpf);
@@ -22,11 +22,11 @@ export default class Order {
 
   addItem(item: Item, quantity: number) {
     this.freigth += this.freigthCalculator.calculate(item) * quantity;
-    this.orderItems.push(new OrderItem(item.idItem, item.price, quantity))
+    this.orderItems.push(new OrderItem(item.idItem, item.price, quantity));
   }
 
   addCoupon(coupon: Coupon) {
-    if(coupon.isExpired(this.date)) return;
+    if (coupon.isExpired(this.date)) return;
     this.coupon = coupon;
   }
 
@@ -48,10 +48,10 @@ export default class Order {
 
   getTotal() {
     let total = 0;
-    for(const orderItem of this.orderItems) {
+    for (const orderItem of this.orderItems) {
       total += orderItem.getTotal();
     }
-    if(this.coupon) {
+    if (this.coupon) {
       total -= this.coupon.calculateDiscount(total, this.date);
     }
     total += this.getFreigth();

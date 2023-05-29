@@ -18,9 +18,9 @@ const PlaceOrderOutput_1 = __importDefault(require("./PlaceOrderOutput"));
 class PlaceOrder {
     constructor(repositoryFactory) {
         this.repositoryFactory = repositoryFactory;
-        this.orderRepository = repositoryFactory.createOrderRepository();
         this.itemRepository = repositoryFactory.createItemRepository();
         this.couponRepository = repositoryFactory.createCouponRepository();
+        this.orderRepository = repositoryFactory.createOrderRepository();
     }
     execute(input) {
         return __awaiter(this, void 0, void 0, function* () {

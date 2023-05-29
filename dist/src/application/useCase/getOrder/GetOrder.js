@@ -12,16 +12,17 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const OrderList_1 = __importDefault(require("../../src/application/useCase/orderList/OrderList"));
-const PgPromiseConnectionAdapter_1 = __importDefault(require("../../src/infra/database/PgPromiseConnectionAdapter"));
-const OrderRepositoryDatabase_1 = __importDefault(require("../../src/infra/repository/database/OrderRepositoryDatabase"));
-test("Deve retornar a lista de pedidos", function () {
-    return __awaiter(this, void 0, void 0, function* () {
-        const connection = PgPromiseConnectionAdapter_1.default.getInstance();
-        const orderRepository = new OrderRepositoryDatabase_1.default(connection);
-        const count = yield orderRepository.count();
-        const orderList = new OrderList_1.default(orderRepository);
-        const orders = yield orderList.execute();
-        expect(orders.length).toBe(count);
-    });
-});
+const GetOrderOutput_1 = __importDefault(require("./GetOrderOutput"));
+class GetOrder {
+    constructor(repositoryFactory) {
+        this.orderRepository = repositoryFactory.createOrderRepository();
+    }
+    execute(code) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const order = yield this.orderRepository.get(code);
+            const getOrderOutput = new GetOrderOutput_1.default(order.getCode(), order.getTotal());
+            return getOrderOutput;
+        });
+    }
+}
+exports.default = GetOrder;

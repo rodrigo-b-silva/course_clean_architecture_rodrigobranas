@@ -13,6 +13,18 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const axios_1 = __importDefault(require("axios"));
+const PlaceOrder_1 = __importDefault(require("../../src/application/useCase/place_order/PlaceOrder"));
+const PgPromiseConnectionAdapter_1 = __importDefault(require("../../src/infra/database/PgPromiseConnectionAdapter"));
+const OrderRepositoryDatabase_1 = __importDefault(require("../../src/infra/repository/database/OrderRepositoryDatabase"));
+const DatabaseRepositoryFactory_1 = __importDefault(require("../../src/infra/factory/DatabaseRepositoryFactory"));
+let placeOrder;
+let orderRepository;
+beforeEach(function () {
+    const connection = PgPromiseConnectionAdapter_1.default.getInstance();
+    orderRepository = new OrderRepositoryDatabase_1.default(connection);
+    const repositoryFactory = new DatabaseRepositoryFactory_1.default();
+    placeOrder = new PlaceOrder_1.default(repositoryFactory);
+});
 test("Deve testar a API /orders (POST)", function () {
     return __awaiter(this, void 0, void 0, function* () {
         const response = yield (0, axios_1.default)({
@@ -33,18 +45,67 @@ test("Deve testar a API /orders (POST)", function () {
         expect(order.total).toBe(138);
     });
 });
-// test("Deve testar a API /simulateFreigth (POST)", async function() {
-//     const response = await axios({
-//         url: "http://localhost:3000/simulate-freigth",
-//         method: "post",
-//         data: {
-//             items: [
-//                 { idItem: 4, quantity: 1 },
-//                 { idItem: 5, quantity: 1 },
-//                 { idItem: 6, quantity: 3 },
-//             ]
-//         }
-//     });
-//     const output = response.data;
-//     expect(output.amount).toBe(260);
-// })
+test("Deve testar a API /simulate-freigth (POST)", function () {
+    return __awaiter(this, void 0, void 0, function* () {
+        const response = yield (0, axios_1.default)({
+            url: "http://localhost:3000/simulate-freigth",
+            method: "post",
+            data: {
+                items: [
+                    { idItem: 4, quantity: 1 },
+                    { idItem: 5, quantity: 1 },
+                    { idItem: 6, quantity: 3 },
+                ]
+            }
+        });
+        const output = response.data;
+        expect(output.amount).toBe(260);
+    });
+});
+test("Deve testar a API /orders (GET)", function () {
+    return __awaiter(this, void 0, void 0, function* () {
+        const input = {
+            cpf: "839.435.452-10",
+            orderItems: [
+                { idItem: 1, quantity: 1 },
+                { idItem: 2, quantity: 1 },
+                { idItem: 3, quantity: 3 }
+            ],
+            date: new Date("2021-12-10"),
+            coupon: "VALE20"
+        };
+        yield placeOrder.execute(input);
+        const response = yield (0, axios_1.default)({
+            url: "http://localhost:3000/orders",
+            method: "get"
+        });
+        const orders = response.data;
+        expect(orders.orders).toHaveLength(1);
+    });
+});
+test("Deve testar a API /orders/code (GET)", function () {
+    return __awaiter(this, void 0, void 0, function* () {
+        const input = {
+            cpf: "839.435.452-10",
+            orderItems: [
+                { idItem: 1, quantity: 1 },
+                { idItem: 2, quantity: 1 },
+                { idItem: 3, quantity: 3 }
+            ],
+            date: new Date("2021-12-10"),
+            coupon: "VALE20"
+        };
+        yield placeOrder.execute(input);
+        const response = yield (0, axios_1.default)({
+            url: "http://localhost:3000/orders/202100000001",
+            method: "get"
+        });
+        const order = response.data;
+        expect(order.code).toBe('202100000001');
+    });
+});
+afterEach(function () {
+    return __awaiter(this, void 0, void 0, function* () {
+        yield orderRepository.clear();
+    });
+});

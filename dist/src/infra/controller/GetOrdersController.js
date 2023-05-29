@@ -8,16 +8,21 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-class OrderList {
-    constructor(orderRepository) {
-        this.orderRepository = orderRepository;
+const GetOrders_1 = __importDefault(require("../../application/useCase/getOrders/GetOrders"));
+class GetOrdersController {
+    constructor(repositoryFactory) {
+        this.repositoryFactory = repositoryFactory;
     }
-    execute() {
+    execute(params, body) {
         return __awaiter(this, void 0, void 0, function* () {
-            const orders = yield this.orderRepository.list();
-            return orders;
+            const getOrders = new GetOrders_1.default(this.repositoryFactory);
+            const getOrdersOutput = yield getOrders.execute();
+            return getOrdersOutput;
         });
     }
 }
-exports.default = OrderList;
+exports.default = GetOrdersController;
