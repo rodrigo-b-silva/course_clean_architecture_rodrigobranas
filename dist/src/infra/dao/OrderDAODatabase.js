@@ -8,21 +8,20 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-const GetOrder_1 = __importDefault(require("../../application/query/getOrder/GetOrder"));
-class GetOrderController {
-    constructor(orderDAO) {
-        this.orderDAO = orderDAO;
+class OrderDAOatabase {
+    constructor(connection) {
+        this.connection = connection;
     }
-    execute(params, body) {
+    get(code) {
         return __awaiter(this, void 0, void 0, function* () {
-            const getOrder = new GetOrder_1.default(this.orderDAO);
-            const getOrderOutput = yield getOrder.execute(params.code);
-            return getOrderOutput;
+            return yield this.connection.query("select code, total::float from ccca.order where code = $1", [code]);
+        });
+    }
+    findAll() {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield this.connection.query("select code, total::float from ccca.order", []);
         });
     }
 }
-exports.default = GetOrderController;
+exports.default = OrderDAOatabase;

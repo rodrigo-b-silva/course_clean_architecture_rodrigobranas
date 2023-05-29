@@ -4,7 +4,7 @@
   "description": "Projeto de um isstema de gestão financeiro alvo dos conhecimentos adquiridos no custo de Clean Code &amp; Clean Architecture ministrado pelo instrutor Rodrigo Branas",
   "main": "bin/server.ts",
   "scripts": {
-    "test": "tsc && jest ./dist --forceExit",
+    "test": "tsc && jest ./dist --runInBand --forceExit",
     "devxxx": "xxxts-node-dev bin/server.ts --transpile-only --ignore-watch node_modules --respawn bin/server.ts",
     "main": "tsc && node ./dist/src/main"
   },

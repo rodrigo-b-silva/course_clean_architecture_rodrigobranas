@@ -5,7 +5,5 @@ export default interface OrderRepository {
     get(code: string): Promise<Order>;
     findAll(): Promise<Order[]>;
     count(): Promise<number>;
-    findByCode(code: string): Promise<Order | undefined>;
-    list(): Promise<Order[]>;
     clear(): Promise<void>;
 }

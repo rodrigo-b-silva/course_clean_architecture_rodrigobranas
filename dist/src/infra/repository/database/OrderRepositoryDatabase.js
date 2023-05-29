@@ -23,7 +23,7 @@ class OrderRepositoryDatabase {
     save(order) {
         var _a;
         return __awaiter(this, void 0, void 0, function* () {
-            const [orderData] = yield this.connection.query("insert into ccca.order (code, cpf, issue_date, freight, sequence, coupon) values ($1, $2, $3, $4, $5, $6) returning *", [order.getCode(), order.getCpf(), order.date, order.getFreigth(), order.sequence, (_a = order.coupon) === null || _a === void 0 ? void 0 : _a.code]);
+            const [orderData] = yield this.connection.query("insert into ccca.order (code, cpf, issue_date, freight, sequence, coupon, total) values ($1, $2, $3, $4, $5, $6, $7) returning *", [order.getCode(), order.getCpf(), order.date, order.getFreigth(), order.sequence, (_a = order.coupon) === null || _a === void 0 ? void 0 : _a.code, order.getTotal()]);
             for (const orderItem of order.getOrderItems()) {
                 yield this.connection.query("insert into ccca.order_item (id_item, id_order, price, quantity) values ($1, $2, $3, $4)", [orderItem.idItem, orderData.id_order, orderItem.price, orderItem.quantity]);
             }

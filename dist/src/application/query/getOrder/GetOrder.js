@@ -12,17 +12,17 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const GetOrder_1 = __importDefault(require("../../application/query/getOrder/GetOrder"));
-class GetOrderController {
+const GetOrderOutput_1 = __importDefault(require("./GetOrderOutput"));
+class GetOrder {
     constructor(orderDAO) {
         this.orderDAO = orderDAO;
     }
-    execute(params, body) {
+    execute(code) {
         return __awaiter(this, void 0, void 0, function* () {
-            const getOrder = new GetOrder_1.default(this.orderDAO);
-            const getOrderOutput = yield getOrder.execute(params.code);
-            return getOrderOutput;
+            const [orderData] = yield this.orderDAO.get(code);
+            const getOrdersOutput = new GetOrderOutput_1.default(orderData.code, orderData.total);
+            return getOrdersOutput;
         });
     }
 }
-exports.default = GetOrderController;
+exports.default = GetOrder;

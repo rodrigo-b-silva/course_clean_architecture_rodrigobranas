@@ -20,7 +20,7 @@ const PlaceOrderController_1 = __importDefault(require("../controller/PlaceOrder
 const PgPromiseConnectionAdapter_1 = __importDefault(require("../database/PgPromiseConnectionAdapter"));
 const ItemRepositoryDatabase_1 = __importDefault(require("../repository/database/ItemRepositoryDatabase"));
 class RouteConfig {
-    constructor(http, repositoryFactory) {
+    constructor(http, repositoryFactory, orderDAO) {
         http.on("/orders", "post", function (params, body) {
             return __awaiter(this, void 0, void 0, function* () {
                 const placeOrderController = new PlaceOrderController_1.default(repositoryFactory);
@@ -29,13 +29,13 @@ class RouteConfig {
         });
         http.on("/orders", "get", function (params, body) {
             return __awaiter(this, void 0, void 0, function* () {
-                const getOrdersController = new GetOrdersController_1.default(repositoryFactory);
+                const getOrdersController = new GetOrdersController_1.default(orderDAO);
                 return getOrdersController.execute(params, body);
             });
         });
         http.on("/orders/:code", "get", function (params, body) {
             return __awaiter(this, void 0, void 0, function* () {
-                const getOrderController = new GetOrderController_1.default(repositoryFactory);
+                const getOrderController = new GetOrderController_1.default(orderDAO);
                 return getOrderController.execute(params, body);
             });
         });

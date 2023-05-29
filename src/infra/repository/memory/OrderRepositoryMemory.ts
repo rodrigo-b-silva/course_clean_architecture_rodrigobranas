@@ -29,14 +29,6 @@ export default class OrderRepositoryMemory implements OrderRepository {
         return Promise.resolve(this.orders.length);
     }
 
-    findByCode(code: string): Promise<Order | undefined> {
-        return Promise.resolve(this.orders.find(order => order.getCode() === code));
-    }
-
-    list(): Promise<Order[]> {
-        return Promise.resolve(this.orders);
-    }
-
     clear(): Promise<void> {
         this.orders = [];
         return Promise.resolve();
