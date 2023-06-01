@@ -12,19 +12,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const PlaceOrder_1 = __importDefault(require("../../application/useCase/place_order/PlaceOrder"));
-class PlaceOrderController {
-    constructor(repositoryFactory, broker) {
-        this.repositoryFactory = repositoryFactory;
-        this.broker = broker;
-    }
-    execute(params, body) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const placeOrder = new PlaceOrder_1.default(this.repositoryFactory, this.broker);
-            const input = body;
-            input.date = new Date(input.date);
-            return yield placeOrder.execute(input);
-        });
-    }
-}
-exports.default = PlaceOrderController;
+const PgPromiseConnectionAdapter_1 = __importDefault(require("../../../src/infra/database/PgPromiseConnectionAdapter"));
+test("Deve criar uma conexão com o banco de dados", function () {
+    return __awaiter(this, void 0, void 0, function* () {
+        const connection = PgPromiseConnectionAdapter_1.default.getInstance();
+        const itemsData = yield connection.query("select * from ccca.item", []);
+        expect(itemsData).toHaveLength(6);
+    });
+});

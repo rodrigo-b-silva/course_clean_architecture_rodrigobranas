@@ -13,46 +13,97 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const OrderPlacedStockHandler_1 = __importDefault(require("../../../src/application/handler/OrderPlacedStockHandler"));
-const GetOrders_1 = __importDefault(require("../../../src/application/query/getOrders/GetOrders"));
+const GetStock_1 = __importDefault(require("../../../src/application/useCase/getStock/GetStock"));
 const PlaceOrder_1 = __importDefault(require("../../../src/application/useCase/place_order/PlaceOrder"));
 const Broker_1 = __importDefault(require("../../../src/infra/broker/Broker"));
-const OrderDAODatabase_1 = __importDefault(require("../../../src/infra/dao/OrderDAODatabase"));
 const PgPromiseConnectionAdapter_1 = __importDefault(require("../../../src/infra/database/PgPromiseConnectionAdapter"));
 const DatabaseRepositoryFactory_1 = __importDefault(require("../../../src/infra/factory/DatabaseRepositoryFactory"));
 const OrderRepositoryDatabase_1 = __importDefault(require("../../../src/infra/repository/database/OrderRepositoryDatabase"));
+const StockEntryRepositoryDatabase_1 = __importDefault(require("../../../src/infra/repository/database/StockEntryRepositoryDatabase"));
 let placeOrder;
-let getOrders;
+let getStock;
 let orderRepository;
+let stockEntryRepository;
 beforeEach(function () {
     const connection = PgPromiseConnectionAdapter_1.default.getInstance();
     orderRepository = new OrderRepositoryDatabase_1.default(connection);
+    stockEntryRepository = new StockEntryRepositoryDatabase_1.default(connection);
     // const repositoryFactory = new MemoryRepositoryFactory();
     const repositoryFactory = new DatabaseRepositoryFactory_1.default();
-    const orderDAO = new OrderDAODatabase_1.default(connection);
     const broker = new Broker_1.default();
     broker.register(new OrderPlacedStockHandler_1.default(repositoryFactory));
     placeOrder = new PlaceOrder_1.default(repositoryFactory, broker);
-    getOrders = new GetOrders_1.default(orderDAO);
+    getStock = new GetStock_1.default(repositoryFactory);
 });
-test("Deve retornar a lista de pedidos", function () {
+test("Deve fazer um pedido e retornar total", function () {
     return __awaiter(this, void 0, void 0, function* () {
         const input = {
             cpf: "839.435.452-10",
             orderItems: [
                 { idItem: 1, quantity: 1 },
                 { idItem: 2, quantity: 1 },
-                { idItem: 3, quantity: 3 }
+                { idItem: 3, quantity: 3 },
             ],
-            date: new Date("2021-12-10"),
+            date: new Date("2023-05-03"),
             coupon: "VALE20"
         };
+        const output = yield placeOrder.execute(input);
+        expect(output.total).toBe(138);
+    });
+});
+test("Deve fazer um pedido com cálculo de frete", function () {
+    return __awaiter(this, void 0, void 0, function* () {
+        const input = {
+            cpf: "839.435.452-10",
+            orderItems: [
+                { idItem: 4, quantity: 1 },
+                { idItem: 5, quantity: 1 },
+                { idItem: 6, quantity: 3 },
+            ],
+            date: new Date("2023-05-03")
+        };
+        const output = yield placeOrder.execute(input);
+        expect(output.total).toBe(6350);
+    });
+});
+test("Deve fazer um pedido com código", function () {
+    return __awaiter(this, void 0, void 0, function* () {
+        const input = {
+            cpf: "839.435.452-10",
+            orderItems: [
+                { idItem: 4, quantity: 1 },
+                { idItem: 5, quantity: 1 },
+                { idItem: 6, quantity: 3 },
+            ],
+            date: new Date("2023-05-03")
+        };
+        const output = yield placeOrder.execute(input);
+        expect(output.code).toBe("202300000001");
+    });
+});
+test("Deve fazer um pedido e retirar do estoque", function () {
+    return __awaiter(this, void 0, void 0, function* () {
+        const input = {
+            cpf: "839.435.452-10",
+            orderItems: [
+                { idItem: 4, quantity: 1 },
+                { idItem: 5, quantity: 1 },
+                { idItem: 6, quantity: 3 },
+            ],
+            date: new Date("2023-05-03")
+        };
         yield placeOrder.execute(input);
-        const getOrdersOutput = yield getOrders.execute();
-        expect(getOrdersOutput.orders).toHaveLength(1);
+        const totalA = yield getStock.execute(4);
+        const totalB = yield getStock.execute(5);
+        const totalC = yield getStock.execute(6);
+        expect(totalA).toBe(-1);
+        expect(totalB).toBe(-1);
+        expect(totalC).toBe(-3);
     });
 });
 afterEach(function () {
     return __awaiter(this, void 0, void 0, function* () {
+        yield stockEntryRepository.clear();
         yield orderRepository.clear();
     });
 });

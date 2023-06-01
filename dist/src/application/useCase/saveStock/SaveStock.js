@@ -12,19 +12,15 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const PlaceOrder_1 = __importDefault(require("../../application/useCase/place_order/PlaceOrder"));
-class PlaceOrderController {
-    constructor(repositoryFactory, broker) {
-        this.repositoryFactory = repositoryFactory;
-        this.broker = broker;
+const StockEntry_1 = __importDefault(require("../../../domain/entity/StockEntry"));
+class SaveStock {
+    constructor(repositoryFactory) {
+        this.stockEntryRepository = repositoryFactory.createStockEntryRepository();
     }
-    execute(params, body) {
+    execute(input) {
         return __awaiter(this, void 0, void 0, function* () {
-            const placeOrder = new PlaceOrder_1.default(this.repositoryFactory, this.broker);
-            const input = body;
-            input.date = new Date(input.date);
-            return yield placeOrder.execute(input);
+            yield this.stockEntryRepository.save(new StockEntry_1.default(input.idItem, input.operation, input.quantity, new Date()));
         });
     }
 }
-exports.default = PlaceOrderController;
+exports.default = SaveStock;

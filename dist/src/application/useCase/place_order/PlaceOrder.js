@@ -14,10 +14,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const DefaultFreigthCalculator_1 = __importDefault(require("../../../domain/entity/DefaultFreigthCalculator"));
 const Order_1 = __importDefault(require("../../../domain/entity/Order"));
+const OrderPlaced_1 = __importDefault(require("../../../domain/event/OrderPlaced"));
 const PlaceOrderOutput_1 = __importDefault(require("./PlaceOrderOutput"));
 class PlaceOrder {
-    constructor(repositoryFactory) {
+    constructor(repositoryFactory, broker) {
         this.repositoryFactory = repositoryFactory;
+        this.broker = broker;
         this.itemRepository = repositoryFactory.createItemRepository();
         this.couponRepository = repositoryFactory.createCouponRepository();
         this.orderRepository = repositoryFactory.createOrderRepository();
@@ -38,6 +40,7 @@ class PlaceOrder {
                     order.addCoupon(coupon);
             }
             yield this.orderRepository.save(order);
+            yield this.broker.publish(new OrderPlaced_1.default(order));
             const total = order.getTotal();
             const output = new PlaceOrderOutput_1.default(order.getCode(), total);
             return output;

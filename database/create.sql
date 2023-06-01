@@ -47,3 +47,21 @@ create table ccca.order_item (
 	quantity integer,
 	primary key (id_order, id_item)
 );
+
+create table ccca.stock_entry (
+	id serial,
+	id_item integer,
+	operation text,
+	quantity integer,
+	date timestamp,
+	primary key (id)
+);
+insert into ccca.stock_entry (id_item, operation, quantity, date) values (1, 'out', 1, '2023-06-10T10:00:00');
+insert into ccca.stock_entry (id_item, operation, quantity, date) values (3, 'out', 3, '2023-06-10T10:00:00');
+insert into ccca.stock_entry (id_item, operation, quantity, date) values (2, 'out', 1, '2023-06-10T10:00:00');
+insert into ccca.stock_entry (id_item, operation, quantity, date) values (5, 'out', 1, '2023-06-10T10:00:00');
+insert into ccca.stock_entry (id_item, operation, quantity, date) values (6, 'out', 3, '2023-06-10T10:00:00');
+insert into ccca.stock_entry (id_item, operation, quantity, date) values (4, 'out', 1, '2023-06-10T10:00:00');
+insert into ccca.stock_entry (id_item, operation, quantity, date) values (4, 'out', 1, '2023-06-10T10:00:00');
+insert into ccca.stock_entry (id_item, operation, quantity, date) values (5, 'out', 1, '2023-06-10T10:00:00');
+insert into ccca.stock_entry (id_item, operation, quantity, date) values (6, 'out', 3, '2023-06-10T10:00:00');

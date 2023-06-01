@@ -12,27 +12,25 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const GetOrder_1 = __importDefault(require("../../../src/application/query/getOrder/GetOrder"));
+const GetOrders_1 = __importDefault(require("../../../src/application/useCase/getOrders/GetOrders"));
 const PlaceOrder_1 = __importDefault(require("../../../src/application/useCase/place_order/PlaceOrder"));
 const Broker_1 = __importDefault(require("../../../src/infra/broker/Broker"));
-const OrderDAODatabase_1 = __importDefault(require("../../../src/infra/dao/OrderDAODatabase"));
 const PgPromiseConnectionAdapter_1 = __importDefault(require("../../../src/infra/database/PgPromiseConnectionAdapter"));
 const DatabaseRepositoryFactory_1 = __importDefault(require("../../../src/infra/factory/DatabaseRepositoryFactory"));
 const OrderRepositoryDatabase_1 = __importDefault(require("../../../src/infra/repository/database/OrderRepositoryDatabase"));
 let placeOrder;
-let getOrder;
+let getOrders;
 let orderRepository;
 beforeEach(function () {
     const connection = PgPromiseConnectionAdapter_1.default.getInstance();
     orderRepository = new OrderRepositoryDatabase_1.default(connection);
     // const repositoryFactory = new MemoryRepositoryFactory();
     const repositoryFactory = new DatabaseRepositoryFactory_1.default();
-    const orderDAO = new OrderDAODatabase_1.default(connection);
     const broker = new Broker_1.default();
     placeOrder = new PlaceOrder_1.default(repositoryFactory, broker);
-    getOrder = new GetOrder_1.default(orderDAO);
+    getOrders = new GetOrders_1.default(repositoryFactory);
 });
-test("Deve retornar um pedido pelo código", function () {
+test("Deve retornar a lista de pedidos", function () {
     return __awaiter(this, void 0, void 0, function* () {
         const input = {
             cpf: "839.435.452-10",
@@ -44,10 +42,9 @@ test("Deve retornar um pedido pelo código", function () {
             date: new Date("2021-12-10"),
             coupon: "VALE20"
         };
-        const placeOrderOutput = yield placeOrder.execute(input);
-        const getOrderOutput = yield getOrder.execute(placeOrderOutput.code);
-        // expect(getOrderOutput.code).toBe("202100000001");
-        expect(getOrderOutput.total).toBe(138);
+        yield placeOrder.execute(input);
+        const getOrdersOutput = yield getOrders.execute();
+        expect(getOrdersOutput.orders).toHaveLength(1);
     });
 });
 afterEach(function () {

@@ -12,10 +12,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const GetOrder_1 = __importDefault(require("../../../src/application/query/getOrder/GetOrder"));
+const GetOrder_1 = __importDefault(require("../../../src/application/useCase/getOrder/GetOrder"));
 const PlaceOrder_1 = __importDefault(require("../../../src/application/useCase/place_order/PlaceOrder"));
 const Broker_1 = __importDefault(require("../../../src/infra/broker/Broker"));
-const OrderDAODatabase_1 = __importDefault(require("../../../src/infra/dao/OrderDAODatabase"));
 const PgPromiseConnectionAdapter_1 = __importDefault(require("../../../src/infra/database/PgPromiseConnectionAdapter"));
 const DatabaseRepositoryFactory_1 = __importDefault(require("../../../src/infra/factory/DatabaseRepositoryFactory"));
 const OrderRepositoryDatabase_1 = __importDefault(require("../../../src/infra/repository/database/OrderRepositoryDatabase"));
@@ -27,10 +26,9 @@ beforeEach(function () {
     orderRepository = new OrderRepositoryDatabase_1.default(connection);
     // const repositoryFactory = new MemoryRepositoryFactory();
     const repositoryFactory = new DatabaseRepositoryFactory_1.default();
-    const orderDAO = new OrderDAODatabase_1.default(connection);
     const broker = new Broker_1.default();
     placeOrder = new PlaceOrder_1.default(repositoryFactory, broker);
-    getOrder = new GetOrder_1.default(orderDAO);
+    getOrder = new GetOrder_1.default(repositoryFactory);
 });
 test("Deve retornar um pedido pelo código", function () {
     return __awaiter(this, void 0, void 0, function* () {
