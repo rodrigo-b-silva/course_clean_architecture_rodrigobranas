@@ -7,6 +7,7 @@ const PgPromiseConnectionAdapter_1 = __importDefault(require("../database/PgProm
 const CouponRepositoryDatabase_1 = __importDefault(require("../repository/database/CouponRepositoryDatabase"));
 const ItemRepositoryDatabase_1 = __importDefault(require("../repository/database/ItemRepositoryDatabase"));
 const OrderRepositoryDatabase_1 = __importDefault(require("../repository/database/OrderRepositoryDatabase"));
+const StockEntryRepositoryDatabase_1 = __importDefault(require("../repository/database/StockEntryRepositoryDatabase"));
 class DatabaseRepositoryFactory {
     createItemRepository() {
         return new ItemRepositoryDatabase_1.default(PgPromiseConnectionAdapter_1.default.getInstance());
@@ -16,6 +17,9 @@ class DatabaseRepositoryFactory {
     }
     createOrderRepository() {
         return new OrderRepositoryDatabase_1.default(PgPromiseConnectionAdapter_1.default.getInstance());
+    }
+    createStockEntryRepository() {
+        return new StockEntryRepositoryDatabase_1.default(PgPromiseConnectionAdapter_1.default.getInstance());
     }
 }
 exports.default = DatabaseRepositoryFactory;

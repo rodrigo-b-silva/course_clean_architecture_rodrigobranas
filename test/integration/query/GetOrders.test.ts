@@ -1,6 +1,8 @@
+import OrderPlacedStockHandler from "../../../src/application/handler/OrderPlacedStockHandler";
 import GetOrders from "../../../src/application/query/getOrders/GetOrders";
 import PlaceOrder from "../../../src/application/useCase/place_order/PlaceOrder";
 import OrderRepository from "../../../src/domain/repository/OrderRepository";
+import Broker from "../../../src/infra/broker/Broker";
 import OrderDAOatabase from "../../../src/infra/dao/OrderDAODatabase";
 import PgPromiseConnectionAdapter from "../../../src/infra/database/PgPromiseConnectionAdapter";
 import DatabaseRepositoryFactory from "../../../src/infra/factory/DatabaseRepositoryFactory";
@@ -16,7 +18,9 @@ beforeEach(function () {
   // const repositoryFactory = new MemoryRepositoryFactory();
   const repositoryFactory = new DatabaseRepositoryFactory();
   const orderDAO = new OrderDAOatabase(connection);
-  placeOrder = new PlaceOrder(repositoryFactory);
+  const broker = new Broker();
+  broker.register(new OrderPlacedStockHandler(repositoryFactory))
+  placeOrder = new PlaceOrder(repositoryFactory, broker);
   getOrders = new GetOrders(orderDAO);
 })
 

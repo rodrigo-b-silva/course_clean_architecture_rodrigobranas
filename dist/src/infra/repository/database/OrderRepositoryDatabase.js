@@ -66,24 +66,6 @@ class OrderRepositoryDatabase {
             return orderData.count;
         });
     }
-    findByCode(code) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const [orderData] = yield this.connection.query("select *from ccca.order where code = $1", [code]);
-            if (!orderData)
-                return;
-            return new Order_1.default(orderData.cpf, orderData.issue_date, orderData.freigth, orderData.sequence);
-        });
-    }
-    list() {
-        return __awaiter(this, void 0, void 0, function* () {
-            const ordersData = yield this.connection.query("select *from ccca.order", []);
-            let orderList = [];
-            for (const orderData of ordersData) {
-                orderList.push(new Order_1.default(orderData.cpf, orderData.issue_date, orderData.freight, orderData.sequence));
-            }
-            return orderList;
-        });
-    }
     clear() {
         return __awaiter(this, void 0, void 0, function* () {
             yield this.connection.query("delete from ccca.order_item", []);

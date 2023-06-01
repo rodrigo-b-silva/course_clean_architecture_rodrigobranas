@@ -3,6 +3,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const OrderPlacedStockHandler_1 = __importDefault(require("./application/handler/OrderPlacedStockHandler"));
+const Broker_1 = __importDefault(require("./infra/broker/Broker"));
 const OrderDAODatabase_1 = __importDefault(require("./infra/dao/OrderDAODatabase"));
 const PgPromiseConnectionAdapter_1 = __importDefault(require("./infra/database/PgPromiseConnectionAdapter"));
 const DatabaseRepositoryFactory_1 = __importDefault(require("./infra/factory/DatabaseRepositoryFactory"));
@@ -14,5 +16,7 @@ const orderDAO = new OrderDAODatabase_1.default(connection);
 const repositoryFactory = new DatabaseRepositoryFactory_1.default();
 // const fastifyAdapter = new FastifyAdapter();
 const expressAdapter = new ExpressAdapter_1.default();
-new RouteConfig_1.default(expressAdapter, repositoryFactory, orderDAO);
+const broker = new Broker_1.default();
+broker.register(new OrderPlacedStockHandler_1.default(repositoryFactory));
+new RouteConfig_1.default(expressAdapter, repositoryFactory, orderDAO, broker);
 expressAdapter.listen(3000);
