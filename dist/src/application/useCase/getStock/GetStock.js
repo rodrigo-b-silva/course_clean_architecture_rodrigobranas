@@ -21,7 +21,6 @@ class GetStock {
     execute(idItem) {
         return __awaiter(this, void 0, void 0, function* () {
             const stockEntries = yield this.stockEntryRepository.getByIdItem(idItem);
-            // console.log('stockEntries', stockEntries)
             const calculator = new StockCalculator_1.default();
             return calculator.calculate(stockEntries);
         });

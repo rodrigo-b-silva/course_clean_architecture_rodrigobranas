@@ -13,14 +13,17 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const SimulateFreigth_1 = __importDefault(require("../../application/useCase/simulate_freight/SimulateFreigth"));
+const ValidateCoupon_1 = __importDefault(require("../../application/useCase/validate_coupon/ValidateCoupon"));
 const DefaultFreigthCalculator_1 = __importDefault(require("../../domain/entity/DefaultFreigthCalculator"));
+const GetItemsController_1 = __importDefault(require("../controller/GetItemsController"));
 const GetOrderController_1 = __importDefault(require("../controller/GetOrderController"));
 const GetOrdersController_1 = __importDefault(require("../controller/GetOrdersController"));
 const PlaceOrderController_1 = __importDefault(require("../controller/PlaceOrderController"));
 const PgPromiseConnectionAdapter_1 = __importDefault(require("../database/PgPromiseConnectionAdapter"));
+const CouponRepositoryDatabase_1 = __importDefault(require("../repository/database/CouponRepositoryDatabase"));
 const ItemRepositoryDatabase_1 = __importDefault(require("../repository/database/ItemRepositoryDatabase"));
 class RouteConfig {
-    constructor(http, repositoryFactory, orderDAO, broker) {
+    constructor(http, repositoryFactory, orderDAO, broker, itemDAO) {
         http.on("/orders", "post", function (params, body) {
             return __awaiter(this, void 0, void 0, function* () {
                 const placeOrderController = new PlaceOrderController_1.default(repositoryFactory, broker);
@@ -44,6 +47,19 @@ class RouteConfig {
                 const simulateFreigth = new SimulateFreigth_1.default(new ItemRepositoryDatabase_1.default(PgPromiseConnectionAdapter_1.default.getInstance()), new DefaultFreigthCalculator_1.default());
                 const input = body;
                 return yield simulateFreigth.execute(input);
+            });
+        });
+        http.on("/validate-coupon", "post", function (params, body) {
+            return __awaiter(this, void 0, void 0, function* () {
+                const validateCoupon = new ValidateCoupon_1.default(new CouponRepositoryDatabase_1.default(PgPromiseConnectionAdapter_1.default.getInstance()));
+                const input = body;
+                return yield validateCoupon.execute(input.coupon);
+            });
+        });
+        http.on("/items", "get", function (params, body) {
+            return __awaiter(this, void 0, void 0, function* () {
+                const getItemsController = new GetItemsController_1.default(itemDAO);
+                return getItemsController.execute(params, body);
             });
         });
     }

@@ -15,12 +15,12 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const ValidateCoupon_1 = __importDefault(require("../../../src/application/useCase/validate_coupon/ValidateCoupon"));
 const PgPromiseConnectionAdapter_1 = __importDefault(require("../../../src/infra/database/PgPromiseConnectionAdapter"));
 const CouponRepositoryDatabase_1 = __importDefault(require("../../../src/infra/repository/database/CouponRepositoryDatabase"));
-test("Deve validar o cupom de desconto", function () {
+test("Deve validar um cupom de desconto", function () {
     return __awaiter(this, void 0, void 0, function* () {
         const connection = PgPromiseConnectionAdapter_1.default.getInstance();
         const couponRepository = new CouponRepositoryDatabase_1.default(connection);
         const validateCoupon = new ValidateCoupon_1.default(couponRepository);
-        const isValid = yield validateCoupon.execute("VALE20");
-        expect(isValid).toBeTruthy();
+        const output = yield validateCoupon.execute("VALE20");
+        expect(output.isValid).toBeTruthy();
     });
 });

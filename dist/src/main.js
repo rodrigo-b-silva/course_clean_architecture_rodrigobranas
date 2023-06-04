@@ -5,6 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const OrderPlacedStockHandler_1 = __importDefault(require("./application/handler/OrderPlacedStockHandler"));
 const Broker_1 = __importDefault(require("./infra/broker/Broker"));
+const ItemDAODatabase_1 = __importDefault(require("./infra/dao/ItemDAODatabase"));
 const OrderDAODatabase_1 = __importDefault(require("./infra/dao/OrderDAODatabase"));
 const PgPromiseConnectionAdapter_1 = __importDefault(require("./infra/database/PgPromiseConnectionAdapter"));
 const DatabaseRepositoryFactory_1 = __importDefault(require("./infra/factory/DatabaseRepositoryFactory"));
@@ -13,10 +14,11 @@ const ExpressAdapter_1 = __importDefault(require("./infra/http/ExpressAdapter"))
 const RouteConfig_1 = __importDefault(require("./infra/http/RouteConfig"));
 const connection = PgPromiseConnectionAdapter_1.default.getInstance();
 const orderDAO = new OrderDAODatabase_1.default(connection);
+const itemDAO = new ItemDAODatabase_1.default(connection);
 const repositoryFactory = new DatabaseRepositoryFactory_1.default();
 // const fastifyAdapter = new FastifyAdapter();
 const expressAdapter = new ExpressAdapter_1.default();
 const broker = new Broker_1.default();
 broker.register(new OrderPlacedStockHandler_1.default(repositoryFactory));
-new RouteConfig_1.default(expressAdapter, repositoryFactory, orderDAO, broker);
+new RouteConfig_1.default(expressAdapter, repositoryFactory, orderDAO, broker, itemDAO);
 expressAdapter.listen(3000);

@@ -12,19 +12,17 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const Coupon_1 = __importDefault(require("../../../domain/entity/Coupon"));
-class CouponRepositoryDatabase {
-    constructor(connection) {
-        this.connection = connection;
+const GetItems_1 = __importDefault(require("../../application/query/getItems/GetItems"));
+class GetItemsController {
+    constructor(itemDAO) {
+        this.itemDAO = itemDAO;
     }
-    findByCode(code) {
+    execute(params, body) {
         return __awaiter(this, void 0, void 0, function* () {
-            const [couponData] = yield this.connection.query("select * from ccca.coupon where code = $1", [code]);
-            console.log('ooooo', couponData);
-            if (!couponData)
-                return;
-            return new Coupon_1.default(couponData.code, couponData.percentage, couponData.expire_date);
+            const getItems = new GetItems_1.default(this.itemDAO);
+            const items = yield getItems.execute();
+            return items;
         });
     }
 }
-exports.default = CouponRepositoryDatabase;
+exports.default = GetItemsController;

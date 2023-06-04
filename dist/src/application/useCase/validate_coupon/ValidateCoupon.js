@@ -8,7 +8,11 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
+const ValidateCouponOutput_1 = __importDefault(require("./ValidateCouponOutput"));
 class ValidateCoupon {
     constructor(couponRepository) {
         this.couponRepository = couponRepository;
@@ -18,7 +22,7 @@ class ValidateCoupon {
             const coupon = yield this.couponRepository.findByCode(code);
             if (!coupon)
                 throw new Error("Invalid coupon");
-            return coupon.isValid();
+            return new ValidateCouponOutput_1.default(coupon.isValid(), coupon.percentage);
         });
     }
 }

@@ -19,9 +19,7 @@ class StockEntryRepositoryDatabase {
     }
     getByIdItem(idItem) {
         return __awaiter(this, void 0, void 0, function* () {
-            // console.log('idItem', 1);
             const stockEntriesData = yield this.connection.query("select * from ccca.stock_entry where id_item = $1", [idItem]);
-            // console.log('stockEntriesData', stockEntriesData);
             const stockEntries = [];
             for (const stockEntryData of stockEntriesData) {
                 stockEntries.push(new StockEntry_1.default(stockEntryData.id_item, stockEntryData.operation, stockEntryData.quantity, new Date(stockEntryData.date)));

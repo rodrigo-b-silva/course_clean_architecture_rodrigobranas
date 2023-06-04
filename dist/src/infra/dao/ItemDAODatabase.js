@@ -8,23 +8,20 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-const Coupon_1 = __importDefault(require("../../../domain/entity/Coupon"));
-class CouponRepositoryDatabase {
+class ItemDAODatabase {
     constructor(connection) {
         this.connection = connection;
     }
-    findByCode(code) {
+    findAll() {
         return __awaiter(this, void 0, void 0, function* () {
-            const [couponData] = yield this.connection.query("select * from ccca.coupon where code = $1", [code]);
-            console.log('ooooo', couponData);
-            if (!couponData)
-                return;
-            return new Coupon_1.default(couponData.code, couponData.percentage, couponData.expire_date);
+            const items = yield this.connection.query("select * from ccca.item", []);
+            return items.map(function (item) {
+                item.idItem = item.id_item;
+                item.price = parseFloat(item.price);
+                return item;
+            });
         });
     }
 }
-exports.default = CouponRepositoryDatabase;
+exports.default = ItemDAODatabase;
